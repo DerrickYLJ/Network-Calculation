@@ -1,32 +1,30 @@
 from pycpa import *
 
-# case 2 : VL2
-# VL8 -> VL1 -> VL4 -> VL11 -> switch A (VL8)to B -> VL12 -> switch B (VL12) to ES2
+# case 10 : VL8 to ES2
+# ES1 -> (VL1 + VL4 + VL11) -> Switch B -> (VL10 + VL12) -> Switch A -> (None) -> ES2
+
 
 # generate an new system
 s = model.System('compare')
 
 # set up all the resouces, or vertexes
-VL8 = s.bind_resource(model.Resource("FromSource", schedulers.SPNPScheduler()))
-VL1 = s.bind_resource(model.Resource("VL1", schedulers.SPNPScheduler()))
-VL4 = s.bind_resource(model.Resource("VL4", schedulers.SPNPScheduler()))
-VL11 = s.bind_resource(model.Resource("VL11", schedulers.SPNPScheduler()))
+source_fromES1 = s.bind_resource(model.Resource("source_fromES2", schedulers.SPNPScheduler()))
+first = s.bind_resource(model.Resource("first", schedulers.SPNPScheduler()))
 switchA_to_B = s.bind_resource(model.Resource("switchA_to_B", schedulers.SPNPScheduler()))
-VL12 = s.bind_resource(model.Resource("VL12", schedulers.SPNPScheduler()))
-switchA_to_ES1 = s.bind_resource(model.Resource("switchA_to_ES1", schedulers.SPNPScheduler()))
+second = s.bind_resource(model.Resource("second", schedulers.SPNPScheduler()))
+switchB_to_ES2 = s.bind_resource(model.Resource("switchB_to_ES2", schedulers.SPNPScheduler()))
+third = s.bind_resource(model.Resource("third", schedulers.SPNPScheduler()))
 
 #create tasks related to the resources
-t1 = VL8.bind_task(model.Task("T1", wcet=14, bcet=1, scheduling_parameter=2))
-t2 = VL1.bind_task(model.Task("T2", wcet=8, bcet=1, scheduling_parameter=2))
-t3 = VL4.bind_task(model.Task("T3", wcet=30, bcet=1, scheduling_parameter=2))
-t4 = VL11.bind_task(model.Task("T4", wcet=121, bcet=1, scheduling_parameter=2))
-t5 = switchA_to_B.bind_task(model.Task("T3", wcet=14, bcet=1, scheduling_parameter=2))
-t6 = VL12.bind_task(model.Task("T3", wcet=14, bcet=1, scheduling_parameter=2))
-t7 = switchA_to_ES1.bind_task(model.Task("T4", wcet=14, bcet=1, scheduling_parameter=2))
-
+t1 = source_fromES1.bind_task(model.Task("T1", wcet=14, bcet=1, scheduling_parameter=2))
+t2 = first.bind_task(model.Task("VL1 + VL4 + VL11", wcet=159, bcet=1, scheduling_parameter=2))
+t3 = switchA_to_B.bind_task(model.Task("T3", wcet=14, bcet=1, scheduling_parameter=2))
+t4 = second.bind_task(model.Task("VL10 + VL12", wcet=44, bcet=1, scheduling_parameter=2))
+t5 = switchB_to_ES2.bind_task(model.Task("T5", wcet=14, bcet=1, scheduling_parameter=2))
+t6 = third.bind_task(model.Task("None", wcet=0, bcet=0, scheduling_parameter=2))
 
 # specify precedence constraints and link all the tasks altogether:
-t1.link_dependent_task(t2).link_dependent_task(t3).link_dependent_task(t4).link_dependent_task(t5).link_dependent_task(t6).link_dependent_task(t7)
+t1.link_dependent_task(t2).link_dependent_task(t3).link_dependent_task(t4).link_dependent_task(t5).link_dependent_task(t6)
 
 t1.in_event_model = model.PJdEventModel(P=16000, J=0)
 
@@ -41,7 +39,7 @@ for r in sorted(s.resources, key=str):
         print("    b_wcrt=%s" % (task_results[t].b_wcrt_str()))
 
 # specify paths
-p1 = s.bind_path(model.Path("P1", [t1, t2, t3, t4, t5, t6, t7]))
+p1 = s.bind_path(model.Path("P1", [t1, t2, t3, t4, t5, t6]))
 
 paths = [p1]
 # perform path analysis
