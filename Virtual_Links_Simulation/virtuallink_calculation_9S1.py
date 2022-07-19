@@ -1,6 +1,6 @@
 from pycpa import *
 
-# case 2 : VL2
+# case 12 : VL9 to ES3
 # ES2 -> (VL2 + VL3 + VL7) -> Switch B -> (VL6 + VL13) -> Switch A -> (VL5 + VL12) -> ES1
 
 
@@ -12,7 +12,7 @@ source_fromES2 = s.bind_resource(model.Resource("source_fromES2", schedulers.SPN
 first = s.bind_resource(model.Resource("first", schedulers.SPNPScheduler()))
 switchB_to_A = s.bind_resource(model.Resource("switchB_to_A", schedulers.SPNPScheduler()))
 second = s.bind_resource(model.Resource("second", schedulers.SPNPScheduler()))
-switchA_to_ES2 = s.bind_resource(model.Resource("switchA_to_ES2", schedulers.SPNPScheduler()))
+switchA_to_ES1 = s.bind_resource(model.Resource("switchA_to_ES1", schedulers.SPNPScheduler()))
 third = s.bind_resource(model.Resource("third", schedulers.SPNPScheduler()))
 
 #create tasks related to the resources
@@ -20,7 +20,7 @@ t1 = source_fromES2.bind_task(model.Task("T1", wcet=121, bcet=1, scheduling_para
 t2 = first.bind_task(model.Task("VL2 + VL3 + VL7", wcet=52, bcet=1, scheduling_parameter=2))
 t3 = switchB_to_A.bind_task(model.Task("T3", wcet=121, bcet=1, scheduling_parameter=2))
 t4 = second.bind_task(model.Task("VL6 + VL13", wcet=38, bcet=1, scheduling_parameter=2))
-t5 = switchA_to_ES2.bind_task(model.Task("T5", wcet=121, bcet=1, scheduling_parameter=2))
+t5 = switchA_to_ES1.bind_task(model.Task("T5", wcet=121, bcet=1, scheduling_parameter=2))
 t6 = third.bind_task(model.Task("VL5 + VL12", wcet=22, bcet=0, scheduling_parameter=2))
 
 # specify precedence constraints and link all the tasks altogether:
