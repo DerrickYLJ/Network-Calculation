@@ -19,7 +19,7 @@ t1 = VL6.bind_task(model.Task("T1", wcet=8, bcet=1, scheduling_parameter=2))
 t2 = VL2.bind_task(model.Task("T2", wcet=8, bcet=1, scheduling_parameter=2))
 t3 = VL3.bind_task(model.Task("T3", wcet=30, bcet=1, scheduling_parameter=2))
 t4 = switchB_to_A.bind_task(model.Task("T4", wcet=8, bcet=1, scheduling_parameter=2))
-t5 = VL5.bind_task(model.Task("T3", wcet=8, bcet=1, scheduling_parameter=2))
+t5 = VL5.bind_task(model.Task("T3", wcet=30, bcet=1, scheduling_parameter=2))
 t6 = switchA_to_ES1.bind_task(model.Task("T4", wcet=8, bcet=1, scheduling_parameter=2))
 
 
