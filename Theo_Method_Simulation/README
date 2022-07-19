@@ -1,0 +1,3 @@
+This is for new simuation method under two important assumptions:
+1. Every virtual link will at most be blocked once by the same virtual link
+2. The virtual links with low priority will still block the current link since the scheduler is SNPN scheduler
